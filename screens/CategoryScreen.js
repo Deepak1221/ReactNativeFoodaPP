@@ -3,7 +3,6 @@ import {  View,Text,FlatList,StyleSheet ,Dimensions} from "react-native";
 import { CATEGORIES } from "../data/DummyData";
 import CategoryGridItem from "../components/CategoryGridItem";
 
-
 const CategoryScreen = props =>{
     const renderGridItem = (itemData) =>{
         return( <CategoryGridItem item= { itemData.item} onSelect={()=> {

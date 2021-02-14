@@ -8,16 +8,15 @@ import {
     Platform,
     FlatList
 } from 'react-native';
-import { MEALS } from "../data/DummyData";
 import MealListItem from "../components/MealListItem";
+import {  useSelector} from "react-redux";
 
 
 
 const CategoryMealScreen = props =>{
-   
+    const availableMeals = useSelector(state =>state.meals.filteredMeals )
     const listItem = props.navigation.getParam('item')
-    console.log(listItem)
-    const mealsList = MEALS.filter(meals =>
+    const mealsList = availableMeals.filter(meals =>
         meals.categoryIds.indexOf(listItem.id)>=0
 
     )

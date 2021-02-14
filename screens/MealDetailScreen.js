@@ -5,9 +5,7 @@ import {  View,Text,StyleSheet ,Image,ScrollView} from "react-native";
 
 const MealDetailScreen = props =>{
     const listItem = props.navigation.getParam('item')
-    console.log('Deepak',listItem)
-    console.log("image:",listItem.imageUrl )
-
+  
     return(
         <ScrollView style={styles.container}>
             <Image
