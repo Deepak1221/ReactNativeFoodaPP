@@ -1,21 +1,44 @@
-import React from 'react';
-import {  View,Text,StyleSheet ,Image,ScrollView} from "react-native";
-
+import React ,{useEffect, useCallback}from 'react';
+import {useSelector, useDispatch} from 'react-redux'
+import {  View,Text,StyleSheet ,Image,ScrollView,TouchableOpacity} from "react-native";
+import {toggleFavorite } from '../store/actions/meals'
+import { ICONS } from "../contstant/icons";
+import { COLORS } from "../contstant/Colors";
 
 
 const MealDetailScreen = props =>{
+    const availableMeals = useSelector(state=> state.meals.meals)
     const listItem = props.navigation.getParam('item')
+    const mealId = listItem.id
+    const isFav = useSelector(state => 
+        state.meals.favouriteMeals.some(m=> m.id === mealId)
+        );
+    const selectedMeal = availableMeals.find(meal => meal.id == mealId)
+    console.log(availableMeals +" : "+listItem+" : "+mealId+" : "+selectedMeal)
+
+    const dispatch = useDispatch();
+    const togglefavouriteHandler=useCallback(()=>{
+     dispatch(toggleFavorite(mealId));
+    },[dispatch,mealId])
   
+    useEffect( () =>{
+    //  props.navigation.setParams({mealTitle: selectedMeal.title});
+    props.navigation.setParams({toggleFav: togglefavouriteHandler })
+    },[togglefavouriteHandler])
+
+useEffect(()=>{
+    props.navigation.setParams({isFav: isFav});
+},[isFav])
     return(
         <ScrollView style={styles.container}>
             <Image
-                source={{ uri: listItem.imageUrl }}
+                source={{ uri: selectedMeal.imageUrl }}
                 style={styles.imageStyle}               
             />
             <View style={styles.containerCard}>
                 <Text style={styles.txtTitleStyle}>Ingredients</Text>
                 <View style={styles.horizontalContainerStyle}> 
-                {listItem.ingredients.map(ingredients =>{
+                {selectedMeal.ingredients.map(ingredients =>{
                     return (
                         <Text style={styles.itemTxtStyle} key={ingredients}>{ingredients}</Text>
                     )
@@ -43,11 +66,21 @@ const MealDetailScreen = props =>{
 
 MealDetailScreen.navigationOptions = navigationdata => {
     const listItem = navigationdata.navigation.getParam('item');
+    const mealTitle = navigationdata.navigation.getParam('mealTitle');
+    const toggleFavorite = navigationdata.navigation.getParam('toggleFav')
+    const isFav = navigationdata.navigation.getParam('isFav')
  
     return {
-        headerTitle: listItem.title,
+        headerTitle: mealTitle,
         headerRight: (
-            <Text>FAV</Text>
+            <TouchableOpacity onPress={toggleFavorite}>
+                <Image
+                source= {isFav ? ICONS.heartSelected:ICONS.heartUnSelected}
+                resizeMode="contain"
+                style={styles.favIconStyle}
+                />
+        
+            </TouchableOpacity>
           ),
     }
 }
@@ -96,5 +129,11 @@ const styles = StyleSheet.create({
         
 
     },
+    favIconStyle:{
+        width: 25,
+        height: 25,
+        marginRight:10,
+        tintColor:COLORS.white
+    }
 })
 export default MealDetailScreen

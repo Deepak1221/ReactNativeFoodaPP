@@ -1,7 +1,9 @@
 import React from 'react';
-import {  View,Text,FlatList,StyleSheet ,Dimensions} from "react-native";
+import {  View,Text,FlatList,StyleSheet ,Dimensions,TouchableOpacity,Image} from "react-native";
 import { CATEGORIES } from "../data/DummyData";
 import CategoryGridItem from "../components/CategoryGridItem";
+import { ICONS } from "../contstant/icons";
+import { COLORS } from "../contstant/Colors";
 
 const CategoryScreen = props =>{
     const renderGridItem = (itemData) =>{
@@ -23,7 +25,19 @@ const CategoryScreen = props =>{
 
 CategoryScreen.navigationOptions = (navigationData)=> {
     return{
-        headerTitle:"Category"
+        headerTitle:"Category",
+        headerLeft: (
+            <TouchableOpacity onPress={()=>{
+                navigationData.navigation.toggleDrawer()
+                }}>
+                <Image
+                source= {ICONS.menu}
+                resizeMode="contain"
+                style={styles.favIconStyle}
+                />
+        
+            </TouchableOpacity>
+          ),
      }
     
 }
@@ -47,6 +61,12 @@ const styles = StyleSheet.create({
        
   
 
+    },
+    favIconStyle:{
+        width: 22,
+        height: 22,
+        marginLeft:10,
+        tintColor:COLORS.white
     }
 })
 
